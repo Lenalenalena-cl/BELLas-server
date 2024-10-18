@@ -12,23 +12,31 @@ const getVotes = async (req, res) => {
 };
 
 const postVote = async (req, res) => {
-  const {suggestion_id, email, optin} = req.body;
+  const { suggestion_id, email, optin } = req.body;
+
   // validate submission here
   if (!suggestion_id || !email || !optin) {
-    return res.status(400).json({ message: "suggestion_id, Email, or optin shouldn't be empty" });
+    return res.status(400).json({ message: "suggestion_id, email, or optin shouldn't be empty" });
   }
+
+  const votes = await knex("votes");
+  const alreadyVoted = votes.find((vote) => {
+    return vote.email === email;
+  });
+  if (alreadyVoted) {
+    return res.status(400).json({ message: "Already voted" });
+  }
+
   try {
     const result = await knex("votes").insert({
       suggestion_id,
       email,
-      optin
+      optin,
     });
 
-    await knex("suggestions")
-      .where("id", suggestion_id)
-      .increment("votes", 1); // Increment the votes count by 1
+    await knex("suggestions").where("id", suggestion_id).increment("votes", 1); // Increment the votes count by 1
 
-    res.status(201).json(result);
+    res.status(201).json({ message: "Voting successful" });
   } catch (error) {
     res.status(500).json({
       message: `Unable to submit suggestion: ${error}`,

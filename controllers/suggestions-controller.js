@@ -12,20 +12,21 @@ const getSuggestions = async (req, res) => {
 };
 
 const postSuggestion = async (req, res) => {
-  const { name, email, suggestion, votes = 0} = req.body;
+  const { name, email, suggestion, votes = 0 } = req.body;
+
   // validate submission here
-  if (!name || !email || !suggestion){
-    return res.status(400).json({ message: "Name, Email or suggestion shouldnt be empty"})
+  if (!name || !email || !suggestion) {
+    return res.status(400).json({ message: "name, email, and suggestion shouldn't be empty" });
   }
 
   try {
     const result = await knex("suggestions").insert({
       name,
-      email, 
+      email,
       suggestion,
-      votes
+      votes,
     });
-    res.status(201).json(result);
+    res.status(201).json({ message: "Suggestion submitted" });
   } catch (error) {
     res.status(500).json({
       message: `Unable to submit suggestion: ${error}`,
