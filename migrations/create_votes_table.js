@@ -4,7 +4,8 @@ export function up(knex) {
     table
       .integer("suggestion_id")
       .unsigned()
-      .references("suggestions.id")
+      .references("id")
+      .inTable('suggestions')
       .onUpdate("CASCADE")
       .onDelete("CASCADE");
     table.timestamp("timestamp").notNullable().defaultTo(knex.fn.now());

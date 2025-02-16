@@ -34,6 +34,10 @@ app.use(cors());
 app.use(express.static("public"));
 app.use(express.json());
 
+app.get("/", (_req, res) => {
+  res.send("Welcome to the Bell Changemakers server");
+});
+
 app.use("/suggestions", suggestionsRoutes);
 app.use("/votes", votesRoutes);
 

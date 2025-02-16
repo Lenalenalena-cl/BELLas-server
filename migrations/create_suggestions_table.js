@@ -5,7 +5,7 @@ export function up(knex) {
     table.string("name").notNullable();
     table.string("email").notNullable();
     table.string("suggestion").notNullable();
-    table.integer("votes").unsigned().notNullable();
+    table.integer("votes").unsigned().notNullable().defaultTo(0);
   });
 }
 

@@ -1,8 +1,8 @@
 import express from "express";
-import { getSuggestions, submitSuggestion } from "../controllers/suggestions-controller.js";
+import { getSuggestions, postSuggestion } from "../controllers/suggestions-controller.js";
 
 const suggestionsRoutes = express.Router();
 
-suggestionsRoutes.route("/").get(getSuggestions).post(submitSuggestion);
+suggestionsRoutes.route("/").get(getSuggestions).post(postSuggestion);
 
 export default suggestionsRoutes;

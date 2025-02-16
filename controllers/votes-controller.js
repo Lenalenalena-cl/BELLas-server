@@ -11,16 +11,24 @@ const getVotes = async (req, res) => {
   }
 };
 
-const submitVote = async (req, res) => {
+const postVote = async (req, res) => {
+  const {suggestion_id, email, optin} = req.body;
   // validate submission here
-
+  if (!suggestion_id || !email || !optin) {
+    return res.status(400).json({ message: "suggestion_id, Email, or optin shouldn't be empty" });
+  }
   try {
     const result = await knex("votes").insert({
-      suggestion_id: req.body.suggestion_id,
-      email: req.body.email,
-      optin: req.body.optin,
+      suggestion_id,
+      email,
+      optin
     });
-    res.status(200).json(result);
+
+    await knex("suggestions")
+      .where("id", suggestion_id)
+      .increment("votes", 1); // Increment the votes count by 1
+
+    res.status(201).json(result);
   } catch (error) {
     res.status(500).json({
       message: `Unable to submit suggestion: ${error}`,
@@ -28,4 +36,4 @@ const submitVote = async (req, res) => {
   }
 };
 
-export { getVotes, submitVote };
+export { getVotes, postVote };
